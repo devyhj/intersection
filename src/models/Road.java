@@ -1,17 +1,18 @@
 package models;
 
 import java.util.ArrayDeque;
-import java.util.Queue;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Road {
 
     private Road oppositeRoad;
     private Road leftRoad;
 
-    private Queue<Car> leftTurnLane;
-    private Queue<Car> straightLane1;
-    private Queue<Car> straightLane2;
-    private Queue<Car> rightTurnLane;
+    private ArrayDeque<Car> leftTurnLane;
+    private ArrayDeque<Car> straightLane1;
+    private ArrayDeque<Car> straightLane2;
+    private ArrayDeque<Car> rightTurnLane;
 
     private TrafficLight trafficLight;
 
@@ -23,7 +24,7 @@ public class Road {
         straightLane2 = new ArrayDeque<>();
         rightTurnLane = new ArrayDeque<>();
         trafficLight = new TrafficLight();
-        camera = new Camera();
+        camera = new Camera(this);
     }
 
     private void addCarToLane(Car car) {
@@ -42,7 +43,23 @@ public class Road {
         }
     }
 
-    public void assignNewCars() {
+    private void putCarBackToLane(Car car) {
+        switch(car.getToward()) {
+            case 0 :
+                leftTurnLane.addFirst(car);
+                break;
+            case 1 :
+                addFirstCarToStraightLane(car);
+                break;
+            case 2 :
+                rightTurnLane.addFirst(car);
+                break;
+            default :
+                break;
+        }
+    }
+
+    public void assignNewCar() {
         if(newCarCame()) {
             Car car = new Car();
             addCarToLane(car);
@@ -50,11 +67,22 @@ public class Road {
     }
 
     public void carMove() {
-        trafficLight.
+        List<Car> cars = new ArrayList<>();
+        cars.add(leftTurnLane.poll());
+        cars.add(straightLane1.poll());
+        cars.add(straightLane2.poll());
+        cars.add(rightTurnLane.poll());
+        for( Car thisCar : cars ) {
+            if( thisCar != null ) {
+                if( !thisCar.canGo(this.trafficLight, this.oppositeRoad, this.leftRoad) ) {
+                    putCarBackToLane(thisCar);
+                }
+            }
+        }
     }
 
     private boolean newCarCame(){
-        return Math.random() < 0.5;
+        return Math.random() < 0.4;
     }
 
     private void addCarToStraightLane(Car car) {
@@ -69,28 +97,29 @@ public class Road {
         }
     }
 
+    private void addFirstCarToStraightLane(Car car) {
+        if(straightLane1.size() < straightLane2.size()) {
+            straightLane1.addFirst(car);
+        }
+        else if(straightLane1.size() > straightLane2.size()) {
+            straightLane2.addFirst(car);
+        }
+        else {
+            straightLane1.addFirst(car);
+        }
+    }
+
     public boolean anyStraight() {
         return this.straightLane1.size() > 0 || this.straightLane2.size() > 0;
     }
 
-    public Queue<Car> getLeftTurnLane() {
-        return leftTurnLane;
+    public boolean anyStraightOnStraightLane2() {
+        return this.straightLane2.size() > 0;
     }
 
-    public Queue<Car> getStraightLane1() {
-        return straightLane1;
-    }
-
-    public Queue<Car> getStraightLane2() {
-        return straightLane2;
-    }
-
-    public Queue<Car> getRightTurnLane() {
-        return rightTurnLane;
-    }
-
-    public TrafficLight getTrafficLight() {
-        return trafficLight;
+    public void setTrafficLight(int straightColor, int leftColor) {
+        this.trafficLight.setStraight(straightColor);
+        this.trafficLight.setLeft(leftColor);
     }
 
     public void setOppositeRoad(Road oppositeRoad) {
@@ -101,4 +130,56 @@ public class Road {
         this.leftRoad = leftRoad;
     }
 
+    public ArrayDeque<Car> getLeftTurnLane() {
+        return leftTurnLane;
+    }
+
+    public ArrayDeque<Car> getStraightLane1() {
+        return straightLane1;
+    }
+
+    public ArrayDeque<Car> getStraightLane2() {
+        return straightLane2;
+    }
+
+    public ArrayDeque<Car> getRightTurnLane() {
+        return rightTurnLane;
+    }
+
+    public Camera getCamera() {
+        return camera;
+    }
+
+    public void printRoadStat() {
+        String straightColor = colorIntToString(trafficLight.getStraight());
+        String leftColor = colorIntToString(trafficLight.getLeft());
+
+        System.out.println("Straight Light: " + straightColor);
+        System.out.println("Left Light: " + leftColor);
+        System.out.println("Left Turn Lane: " + this.getCamera().leftLaneCount());
+        System.out.println("Straight Lane 1: " + this.getCamera().straightLane1Count());
+        System.out.println("Straight Lane 2: " + this.getCamera().straightLane2Count());
+        System.out.println("Right Turn Lane: " + this.getCamera().rightLaneCount());
+    }
+
+    private String colorIntToString(int color) {
+        String stringColor = "";
+        switch(color) {
+            case TrafficLight.RED:
+                stringColor = "Red";
+                break;
+            case TrafficLight.YELLOW:
+                stringColor = "Yellow";
+                break;
+            case TrafficLight.BLINKING_ORANGE:
+                stringColor = "Blinking Orange";
+                break;
+            case TrafficLight.GREEN:
+                stringColor = "Green";
+                break;
+            default:
+                break;
+        }
+        return stringColor;
+    }
 }

@@ -4,10 +4,9 @@ import java.util.Random;
 
 public class Car {
 
-    private final int RED = 0;
-    private final int YELLOW = 1;
-    private final int BLINKING_ORANGE = 2;
-    private final int GREEN = 3;
+    private final int LEFT = 0;
+    private final int STRAIGHT = 1;
+    private final int RIGHT = 2;
 
     //where the car is heading to. 0 = left, 1 = straight, 2 = right
     private int toward;
@@ -22,16 +21,30 @@ public class Car {
     }
 
     public boolean canGo(TrafficLight trafficLight, Road oppsiteRoad, Road leftRoad) {
-        if( toward == 0 ) {
-            if(trafficLight.getLeft() == GREEN || trafficLight.getLeft() == YELLOW) {
+        if( toward == LEFT ) {
+            if(trafficLight.getLeft() == TrafficLight.GREEN || trafficLight.getLeft() == TrafficLight.YELLOW) {
                 return true;
             }
-            else if(trafficLight.getLeft() == BLINKING_ORANGE && !oppsiteRoad.anyStraight()) {
+            else if(trafficLight.getLeft() == TrafficLight.BLINKING_ORANGE && !oppsiteRoad.anyStraight()) {
                 return true;
+            }
+            else {
+                return false;
             }
         }
-        else if( toward == 1 && trafficLight.getStraight() != RED) {
-
+        else if( toward == STRAIGHT && trafficLight.getStraight() != TrafficLight.RED) {
+            return true;
+        }
+        else if( toward == RIGHT ) {
+            if(!leftRoad.anyStraightOnStraightLane2())
+                return true;
+            else if(trafficLight.getStraight() == TrafficLight.GREEN)
+                return true;
+            else
+                return false;
+        }
+        else {
+            return false;
         }
 
     }
