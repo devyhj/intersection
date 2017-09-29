@@ -27,6 +27,7 @@ public class Road {
         camera = new Camera(this);
     }
 
+    //Check car direction and assign car to correct queue
     private void addCarToLane(Car car) {
         switch(car.getToward()) {
             case 0 :
@@ -43,6 +44,7 @@ public class Road {
         }
     }
 
+    //if car cannot go anywhere put back in to the queue
     private void putCarBackToLane(Car car) {
         switch(car.getToward()) {
             case 0 :
@@ -66,6 +68,8 @@ public class Road {
         }
     }
 
+    //take one car per lane try to move car if it's possible
+
     public void carMove() {
         List<Car> cars = new ArrayList<>();
         cars.add(leftTurnLane.poll());
@@ -85,6 +89,7 @@ public class Road {
         return Math.random() < 0.4;
     }
 
+    //for new car arrival
     private void addCarToStraightLane(Car car) {
         if(straightLane1.size() < straightLane2.size()) {
             straightLane1.add(car);
@@ -97,6 +102,7 @@ public class Road {
         }
     }
 
+    //for put back
     private void addFirstCarToStraightLane(Car car) {
         if(straightLane1.size() < straightLane2.size()) {
             straightLane1.addFirst(car);

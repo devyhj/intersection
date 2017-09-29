@@ -20,11 +20,13 @@ public class Car {
         return toward;
     }
 
+    //Check if car can cross
     public boolean canGo(TrafficLight trafficLight, Road oppsiteRoad, Road leftRoad) {
         if( toward == LEFT ) {
+            // if it's green or yellow go
             if(trafficLight.getLeft() == TrafficLight.GREEN || trafficLight.getLeft() == TrafficLight.YELLOW) {
                 return true;
-            }
+            } // if it's blinking orange check opposite road if there is any car crossing
             else if(trafficLight.getLeft() == TrafficLight.BLINKING_ORANGE && !oppsiteRoad.anyStraight()) {
                 return true;
             }
@@ -32,12 +34,15 @@ public class Car {
                 return false;
             }
         }
+        //there is no blinking orange, so cross if it's not red
         else if( toward == STRAIGHT && trafficLight.getStraight() != TrafficLight.RED) {
             return true;
         }
         else if( toward == RIGHT ) {
+            //on any light status check if there is car coming from left road straight lane2 if there is none cross
             if(!leftRoad.anyStraightOnStraightLane2())
                 return true;
+            //if straight light is green, you can cross
             else if(trafficLight.getStraight() == TrafficLight.GREEN)
                 return true;
             else

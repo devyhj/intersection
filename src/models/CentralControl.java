@@ -99,6 +99,7 @@ public class CentralControl {
         System.out.println("Car Count: " + (west.getCamera().carCount() + east.getCamera().carCount() + north.getCamera().carCount() + south.getCamera().carCount()));
     }
 
+    //turn lights to yellow 3 seconds before goes to the next phase
     private void doYellowLight() {
         if(currentSubPhase == 1) {
             activeRoad1.setTrafficLight(TrafficLight.GREEN, TrafficLight.YELLOW);
