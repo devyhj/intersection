@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="intersection:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/intersection_jar</output-path>
+    <root id="archive" name="intersection.jar">
+      <element id="module-output" name="intersection" />
+    </root>
+  </artifact>
+</component>

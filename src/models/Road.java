@@ -188,4 +188,11 @@ public class Road {
         }
         return stringColor;
     }
+
+    public boolean isStraightRed() {
+        if(this.trafficLight.getStraight() == TrafficLight.RED)
+            return true;
+        else
+            return false;
+    }
 }

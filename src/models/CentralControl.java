@@ -162,10 +162,10 @@ public class CentralControl {
     // check car stat and return seconds to substract depend on the road status
     private int checkRoadStat() {
 
-        int decrement = 0;
+        int decrement = 1;
         if( currentSubPhase == 2 ) {
             if (activeRoad1.getCamera().carCount() == 0 && activeRoad2.getCamera().carCount() == 0) {
-                decrement = 15;
+                decrement = 10;
             }
         }
 
@@ -179,9 +179,6 @@ public class CentralControl {
             if( activeRoad2.getCamera().leftLaneCount() == 0 ) {
                 decrement = 5;
             }
-        }
-        else {
-            decrement = 1;
         }
 
         if(remainingTime - decrement <= 3) {

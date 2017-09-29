@@ -42,8 +42,8 @@ public class Car {
             //on any light status check if there is car coming from left road straight lane2 if there is none cross
             if(!leftRoad.anyStraightOnStraightLane2())
                 return true;
-            //if straight light is green, you can cross
-            else if(trafficLight.getStraight() == TrafficLight.GREEN)
+            //if straight light is green, or left road straight sign is red you can cross
+            else if(trafficLight.getStraight() == TrafficLight.GREEN || leftRoad.isStraightRed())
                 return true;
             else
                 return false;
